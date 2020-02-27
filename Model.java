@@ -82,6 +82,8 @@ public class Model {
 	
 	/**
 	 * Checks if a given integer satisfies the restrictions for the 3x3-box that (x,y) lies in.
+	 * Note that xref and yref takes a given (x,y) coordinate and sends it to the upper left corner
+	 * of whichever 3x3-box (x,y) lies in.
 	 */
 	
 	
@@ -112,7 +114,7 @@ public class Model {
 	}
 	
 	/**
-	 * Prints the sudoku into the console
+	 * Prints the sudoku into the console. Temporary until GUI is completed.
 	 */
 	
 	public void print() {
@@ -125,7 +127,11 @@ public class Model {
 	}
 	
 	/**
-	 * Checks if the initially inserted sudoku satisfies the restrictions (for non-zeroes only)
+	 * Checks if the initially inserted sudoku satisfies the restrictions (for non-zeroes only).
+	 * Note that this method does not guarantee that the sudoku is solvable, but rather identifies
+	 * rather obviously unsolveable sudokus (where atleast one of the following 3 scenarios are true:
+	 * 1: Atleast 2 integers of the same value exist on atleast one row. 2: Same but for columns.
+	 * 3: Same but for the relevant 3x3-box).
 	 */
 	
 	public boolean ValidBoard() {
@@ -147,7 +153,13 @@ public class Model {
 	}
 
 	/**
-	 * The solution method. Calls on ValidBoard() before initializing a solution attempt. 
+	 * The solution method. Calls on ValidBoard() before initializing a solution attempt
+	 * in order to make the method run faster. solve scans every empty cell and checks
+	 * if a value can be inserted. If allowed, then it gets inserted and solve jumps to
+	 * the next empty cell. If all empty cells gets filled the sudoku is solved. 
+	 * If one cell cannot be filled in it gets set to 0 and solve jumps back to the 
+	 * previous cell and tries the remainding integers.
+         * This is where the backtracking happens. 
 	 */
 	
     public boolean solve(int x, int y) {
